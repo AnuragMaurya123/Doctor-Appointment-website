@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body{
+  font-family: "Manrope", sans-serif;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+.sticky_header{
+  width:100%;
+  height:80px;
+  line-height:80px;
+  position:sticky;
+  top:0;
+  left:0;
+  z-index:99999;
+  background: white;
+  box-shadow: 3px 3px -8px 3px #ddd;
+}
+
+.swiper-pagination-bullet{
+  width: 12px !important;
+  height: 12px !important;
+  border: 1px solid #181a1e;
+  opacity: 100%;
+  background: #fff !important;
+}
+.swiper-pagination-bullet-active{
+  background: #034ef0 !important;
+  border: none;
+}
+
+.swiper{
+  padding-bottom: 70px !important;
+}
+
+.swiper-slide.swiper-slide-next{
+  background: #0067ff;
+  border-radius: 12px;
+  box-shadow: 0px 20px 70px rgba(0, 103, 255, 0.3) !important;
+}
+
+.swiper-slide.swiper-slide-next h4,.swiper-slide.swiper-slide-next p{
+  color: #fff;
+}
+
+.swiper-pagination{
+  top:90% !important;
+}
+
+@layer base{
+  section{
+    @apply py-[75px];
+  }
+}
+@layer components{
+ .container{
+    @apply max-w-full w-[1440px] px-5 mx-auto;
+  }
+  .btn{
+    @apply bg-primaryColor py-[15px] px-[35px]  rounded-[50px] text-white font-[600] mt-[38px];
+  }
+  .heading{
+    @apply text-[44px] leading-[54px] text-headingColor font-[700] ;
+  }
+  .text-para{
+    @apply  text-[18px] leading-[30px] text-textColor font-[400] mt-[18px] ;
+  }
+  .header{
+    @apply bg-[url('./assets/images/mask.png')] bg-no-repeat bg-center bg-cover w-full h-[100px] leading-[100px]
+  }
+  .hero_section{
+    @apply bg-[url('./assets/images/hero-bg.png')] bg-no-repeat bg-center bg-cover ;  
+  }
+}
+
+@media only screen and (max-width:1024p){
+  .container{
+    @apply w-full;
+  }
+  .section{
+   @apply py-[35px];
+  }
+}
+
+
+@media only screen and (max-width:1024px){
+  .heading{
+    @apply text-[26px] leading-[36px]  font-[700] ;
+  }
+  .text-para{
+    @apply  text-[16px] leading-7  mt-3;
+  }
+}
+
+@media only screen and (max-width:768px){
+    .navigation{
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      display: none;
+    }
+    .menu{
+      width: 15rem;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 200;
+      background-color: #fff;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      line-height: 30px;
+    }
+    .show_menu{
+      display: block;
+    }
+}
