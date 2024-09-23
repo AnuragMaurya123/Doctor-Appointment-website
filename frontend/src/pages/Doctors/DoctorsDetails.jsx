@@ -3,6 +3,7 @@ import doctorImg from "../../assets/images/doctor-img02.png";
 import starIcon from "../../assets/images/Star.png"
 import DoctorsAbout from "./DoctorsAbout";
 import DoctorsFeedback from "./DoctorsFeedback";
+import Slidebar from "./Slidebar";
 const DoctorsDetails = () => {
   const [tad, setTad] = useState("about")
   return (
@@ -39,7 +40,7 @@ const DoctorsDetails = () => {
               </div>
             </div>
 
-      {/* toggle between about abd feedback */}
+      {/* toggle between about and feedback */}
             <div className="mt-[50px] border-b border-solid border-[#0066ff34]">
               <button onClick={()=>setTad('about')} className={`${tad==="about" && "border-b border-solid border-primaryColor"} py-2 px-5 mr-5 text-[16px] leading-7 text-headingColor font-semibold`}>
                 About
@@ -50,8 +51,13 @@ const DoctorsDetails = () => {
             </div>
 
       {/* toggle between display about abd feedback */}
-      <div className="mt-[50px]">{tad === "about" ? <DoctorsAbout/>:<DoctorsFeedback/>}</div>
+      <div className="mt-[50px]">
+        {tad === "about" ? <DoctorsAbout/>:<DoctorsFeedback/>}
+        </div>
           </div>
+         <div>
+         <Slidebar/>
+         </div>
         </div>
       </div>
     </section>

@@ -78,6 +78,13 @@ body{
   .hero_section{
     @apply bg-[url('./assets/images/hero-bg.png')] bg-no-repeat bg-center bg-cover ;  
   }
+  .form_label{
+    @apply text-textColor font-semibold text-[16px] mb-2 leading-7;
+  }
+  .from_input{
+    @apply w-full px-4 py-3 border border-solid border-[#0066ff61] focus:outline-none focus:border-primaryColor
+     text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer rounded-md;
+  }
 }
 
 @media only screen and (max-width:1024p){
