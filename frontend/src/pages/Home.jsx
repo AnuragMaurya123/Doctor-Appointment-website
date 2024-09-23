@@ -253,7 +253,7 @@ const Home = () => {
     </section>
     {/* faq end */}
 
-       {/* our great doctors start */}
+       {/*what's our patient doctors start */}
        <section>
       <div className="container">
       <div className="xl:w-[470px] mx-auto">
@@ -264,7 +264,7 @@ const Home = () => {
       </div>
       </section>
 
-    {/* our great doctors start */}
+    {/*what's our patient doctors end */}
 
   </>
 }
