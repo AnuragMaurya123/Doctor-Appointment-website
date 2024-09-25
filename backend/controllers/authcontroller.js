@@ -4,11 +4,12 @@ import userModel from "../models/userModel.js"
 import bcrypt from "bcryptjs"
 import { v2 as cloudinary } from 'cloudinary';
 import jwt from "jsonwebtoken"
-
-
-const createjwt=(id)=>{
-    return jwt.sign({id},process.env.JWT_SECRET)
+const createjwt = (user) => {
+    return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET,{
+        expiresIn:"15d"
+    });
 }
+
 
 // for register user
 export const register=async(req,res)=>{
@@ -51,38 +52,35 @@ export const register=async(req,res)=>{
         const salt = await bcrypt.genSalt(10)
         const hashingPassword= await bcrypt.hash(password,salt)
 
+        // Define the user data
+        const userData = {
+            email,
+            password: hashingPassword,
+            name,
+            role,
+            photo: uploadResult.secure_url,
+            gender,
+        };
+
+        let newUser=null
         //creating new user and new doctors Account 
         if(role==="patient"){
-            const newUser= userModel.create({
-                email, 
-                password:hashingPassword, 
-                name, 
-                role:"patient", 
-                photo:uploadResult.secure_url, 
-                gender
-            })
-                //saving User with jwt token
-                const token = createjwt(newUser._id)
-                res.json({
-                    success:true,
-                    token,
-                }); 
+           newUser=await userModel.create(userData)    
         }else if (role==="doctor"){
-            const newDoctor= doctorModel.create({
-                email, 
-                password:hashingPassword, 
-                name, 
-                role:"doctor", 
-                photo:uploadResult.secure_url, 
-                gender
-            })
-            //saving User with jwt token
-            const token = createjwt(newDoctor._id)
-            res.json({
-                success:true,
-                token
-            });
+            newUser=await doctorModel.create(userData)  
         }
+
+        console.log(newUser);
+        
+
+        //saving User with jwt token
+        const token = createjwt(newUser)
+        const {password:_,...rest}=newUser._doc
+        res.json({
+            success:true,
+            token,
+            data:{...rest}
+        }); 
 
 
 
@@ -96,8 +94,40 @@ export const register=async(req,res)=>{
 // for register user
 export const login=async(req,res)=>{
     try {
+        const {email,password}= req.body
+        //finding user is exists or not
+        const patient = await userModel.findOne({email})
+        const doctor = await doctorModel.findOne({email})
+        let user=null
+        if(patient){
+           user=patient 
+        }
+        if(doctor){
+           user=patient 
+        }
+
+        if (!user) {
+            return res.json({success:false,message:"User dosn't not exists"}) 
+         }
+       
+       
+             const isMatch=await bcrypt.compare(password,user.password) 
+             if (!isMatch) {
+                return res.json({success:false,message:"Invalid parameter"})  
+            }
+            
+            
+            const token=createjwt(user)
+            const {password:_,role,appointments,...rest}=user._doc
+            return res.json({
+                success:true,
+                token,
+                data:{...rest}
+            })
+      
         
     } catch (error) {
-        
+        console.log(error);
+        res.json({ success:false,message:error})
     }
 }

@@ -4,7 +4,10 @@ import cors from "cors"
 import dotenv from "dotenv"
 import connectDB from "./config/mongodb.js"
 import connectCloudinary from "./config/cloudinary.js"
-import authRouter from "./routers/authrouter.js"
+import authRouter from "./routers/authRouter.js"
+import userRouter from "./routers/userRouter.js"
+import doctorRouter from "./routers/doctorRouter.js"
+
 
 dotenv.config()
 connectDB()
@@ -26,12 +29,14 @@ app.use(cookieParser())
 app.use(cors(corsOption))
 
 //api endpoint
-app.use("/api/user",authRouter);
+app.use("/api/auth",authRouter);
+app.use("/api/users",userRouter);
+app.use("/api/doctors",doctorRouter);
+
 
 
 
 
 app.listen(port,()=>{
-
     console.log("server is running "+ port)
 })
