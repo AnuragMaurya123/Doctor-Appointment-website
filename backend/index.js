@@ -7,6 +7,8 @@ import connectCloudinary from "./config/cloudinary.js"
 import authRouter from "./routers/authRouter.js"
 import userRouter from "./routers/userRouter.js"
 import doctorRouter from "./routers/doctorRouter.js"
+import reviewsRouter from "./routers/reviewRouter.js"
+
 
 
 dotenv.config()
@@ -32,6 +34,7 @@ app.use(cors(corsOption))
 app.use("/api/auth",authRouter);
 app.use("/api/users",userRouter);
 app.use("/api/doctors",doctorRouter);
+app.use("/api/reviews",reviewsRouter);
 
 
 

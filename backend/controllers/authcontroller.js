@@ -52,7 +52,7 @@ export const register=async(req,res)=>{
         const salt = await bcrypt.genSalt(10)
         const hashingPassword= await bcrypt.hash(password,salt)
 
-        // Define the user data
+        // Define the user instance
         const userData = {
             email,
             password: hashingPassword,
@@ -63,18 +63,16 @@ export const register=async(req,res)=>{
         };
 
         let newUser=null
-        //creating new user and new doctors Account 
+        //creating new user or new doctors Account 
         if(role==="patient"){
            newUser=await userModel.create(userData)    
         }else if (role==="doctor"){
             newUser=await doctorModel.create(userData)  
         }
-
-        console.log(newUser);
-        
-
-        //saving User with jwt token
+ 
+        //creating User with jwt token
         const token = createjwt(newUser)
+        //passing the date of user escape password
         const {password:_,...rest}=newUser._doc
         res.json({
             success:true,
@@ -99,6 +97,7 @@ export const login=async(req,res)=>{
         const patient = await userModel.findOne({email})
         const doctor = await doctorModel.findOne({email})
         let user=null
+        //switching user between patient and doctor
         if(patient){
            user=patient 
         }
@@ -106,18 +105,20 @@ export const login=async(req,res)=>{
            user=patient 
         }
 
+        // if user not found
         if (!user) {
             return res.json({success:false,message:"User dosn't not exists"}) 
          }
        
-       
+            //checking password
              const isMatch=await bcrypt.compare(password,user.password) 
              if (!isMatch) {
                 return res.json({success:false,message:"Invalid parameter"})  
             }
             
-            
+            //creating token 
             const token=createjwt(user)
+            //passing the date of user escape password
             const {password:_,role,appointments,...rest}=user._doc
             return res.json({
                 success:true,

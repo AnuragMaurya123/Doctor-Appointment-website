@@ -12,9 +12,11 @@ export const authenticate=(req,res,next)=>{
     }
 
     try {
+        //spilting bearer from token
        const token = authToken.split(" ")[1];
+       //decoding token 
        const decoded_token= jwt.verify(token,process.env.JWT_SECRET)
-        console.log(decoded_token);
+       //after decoding token passing id and role
        req.UserId=decoded_token.id
        req.role=decoded_token.role
         next()
@@ -33,14 +35,15 @@ export const restrict = (roles) => async (req, res, next) => {
     // Try to find the user in either the patient or doctor collection
     const patient = await userModel.findById(UserId);
     const doctor = await doctorModel.findById(UserId);
+    
+    //switching user between patient and doctor 
     let user=null
     if(patient){
         user=patient 
      }
      if(doctor){
-        user=patient 
+        user=doctor 
      }
-     console.log(user);
      
     // If no user found or user role is not in the allowed roles, reject access
     if (!user || !roles.includes(user.role)) {

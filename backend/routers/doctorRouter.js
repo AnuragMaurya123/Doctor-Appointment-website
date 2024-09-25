@@ -1,12 +1,16 @@
 import express from "express"
 import { updatedoctor, deletedoctor ,getAlldoctor,getSingledoctor } from "../controllers/doctorsController.js"
-import { authenticate } from "../middleware/auth.js"
-
+import { authenticate, restrict } from "../middleware/auth.js"
+import reviewsRouter from "./reviewRouter.js"
+// instance of router
 const doctorRouter=express.Router()
-
+// mounting review to related doctor
+doctorRouter.use("/:doctorId/reviews",reviewsRouter)
+//  restricting for updating doctor profile escape doctor 
 doctorRouter.put("/:id",authenticate,restrict(["doctor"]),updatedoctor)
-doctorRouter.get("/",authenticate,restrict(["admin"]),getAlldoctor)
-doctorRouter.get("/:id",authenticate,restrict(["doctor"]),getSingledoctor)
+doctorRouter.get("/",getAlldoctor)
+doctorRouter.get("/:id",getSingledoctor)
+//  restricting for deleting doctor profile escape doctor 
 doctorRouter.delete("/:id",authenticate,restrict(["doctor"]),deletedoctor)
 
 export default doctorRouter

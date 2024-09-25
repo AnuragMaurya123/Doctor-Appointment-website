@@ -1,5 +1,5 @@
 import multer from "multer";
-
+//function  for storing  file name
 const storage=multer.diskStorage({
    
     filename:function(req,file,callback){
