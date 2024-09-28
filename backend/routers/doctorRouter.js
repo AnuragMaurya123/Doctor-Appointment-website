@@ -1,5 +1,5 @@
 import express from "express"
-import { updatedoctor, deletedoctor ,getAlldoctor,getSingledoctor } from "../controllers/doctorsController.js"
+import { updatedoctor, deletedoctor ,getAlldoctor,getSingledoctor, getDoctorProfile } from "../controllers/doctorsController.js"
 import { authenticate, restrict } from "../middleware/auth.js"
 import reviewsRouter from "./reviewRouter.js"
 // instance of router
@@ -12,5 +12,7 @@ doctorRouter.get("/",getAlldoctor)
 doctorRouter.get("/:id",getSingledoctor)
 //  restricting for deleting doctor profile escape doctor 
 doctorRouter.delete("/:id",authenticate,restrict(["doctor"]),deletedoctor)
+
+doctorRouter.get("/profile/me",authenticate,restrict(["doctor"]),getDoctorProfile) //getting user profile
 
 export default doctorRouter

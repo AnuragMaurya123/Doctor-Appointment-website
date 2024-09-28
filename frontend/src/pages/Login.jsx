@@ -1,8 +1,14 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
-
+import axios from 'axios';
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { BACKEND_URL } from '../utils/BaseUrl';
+import HashLoader from "react-spinners/HashLoader"
+import { AuthContext} from '../context/authContext';
 const Login = () => {
-
+  const navigate=useNavigate()
+  const [loading, setLoading] = useState(false)
+  const {dispatch} =useContext(AuthContext)
   const [formData, setFormData] = useState({
     email:"",
     password:""
@@ -19,6 +25,31 @@ const Login = () => {
 
   const onSubmit=async (e)=>{
     e.preventDefault();
+    setLoading(true)
+    try {
+      const response=await axios.post(BACKEND_URL+"/api/auth/login",formData)
+      console.log(response);
+      
+      
+    if(response.data.success){
+        dispatch({
+            type:"LOGIN_SUCCESS",
+            payload:{
+              user:response.data.data,
+              role:response.data.role,
+              token:response.data.token,
+            }
+        })
+        setLoading(false)
+        navigate("/")
+        toast.success("Login Successfully")
+    }else{
+      toast.error(response.data.message)
+    }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message)
+    }
   }
   return (
     <section className='px-5 lg:px-0'>
@@ -59,7 +90,7 @@ const Login = () => {
           <div className="mt-7">
           <button className="w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg py-3 px-4"
              type="submit">
-              Login
+            {loading ? <HashLoader size={50} color='#fff'/>: " Login"}
               </button>
           </div>
 

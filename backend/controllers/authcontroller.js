@@ -4,6 +4,7 @@ import userModel from "../models/userModel.js"
 import bcrypt from "bcryptjs"
 import { v2 as cloudinary } from 'cloudinary';
 import jwt from "jsonwebtoken"
+
 const createjwt = (user) => {
     return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET,{
         expiresIn:"15d"
@@ -21,11 +22,14 @@ export const register=async(req,res)=>{
 
     try {
         let user=null
+        let uploadResult=null
 
-       
-        //storing in cloudinary 
-        const uploadResult = await cloudinary.uploader.upload(photo.path, {resource_type: "image"});
-         
+        if (photo.path) {
+            uploadResult = await cloudinary.uploader.upload(photo.path, { resource_type: "image" });
+        } else {
+            uploadResult = { secure_url: "https://res.cloudinary.com/dbg64eker/image/upload/v1727327044/profile_xpm84y.webp" };
+        }
+        
         //checking user is patient or doctor
         if(role==="patient"){
             user=await userModel.findOne({email})
@@ -61,7 +65,8 @@ export const register=async(req,res)=>{
             photo: uploadResult.secure_url,
             gender,
         };
-
+        console.log(userData.photo);
+        
         let newUser=null
         //creating new user or new doctors Account 
         if(role==="patient"){
@@ -73,9 +78,10 @@ export const register=async(req,res)=>{
         //creating User with jwt token
         const token = createjwt(newUser)
         //passing the date of user escape password
-        const {password:_,...rest}=newUser._doc
+        const {password:_,appointments,...rest}=newUser._doc
         res.json({
             success:true,
+            message:"Register Successfully",
             token,
             data:{...rest}
         }); 
@@ -102,7 +108,7 @@ export const login=async(req,res)=>{
            user=patient 
         }
         if(doctor){
-           user=patient 
+           user=doctor
         }
 
         // if user not found
@@ -123,6 +129,7 @@ export const login=async(req,res)=>{
             return res.json({
                 success:true,
                 token,
+                role,
                 data:{...rest}
             })
       
@@ -132,3 +139,4 @@ export const login=async(req,res)=>{
         res.json({ success:false,message:error})
     }
 }
+

@@ -1,3 +1,4 @@
+import bookingModel from "../models/bookingModel.js";
 import doctorModel from "../models/doctorModel.js";
 
 //creating function for updating doctor
@@ -61,5 +62,31 @@ export const getAlldoctor=async (req,res)=>{
     } catch (error) {
         console.log(error);
         res.json({ success:false,message:error})
+    }
+}
+
+export const getDoctorProfile=async (req,res)=>{
+    //getting userIg from middleware
+    const doctorId =req.userId
+    try {
+       //finding user profile 
+       const doctor = await doctorModel.findOne({doctorId})
+      
+          // if user not found
+        if (!doctor) {
+            return res.json({success:false,message:"doctor not found"}) 
+         }
+       
+         const {password:_,...rest}=doctor._doc
+         const appointments=await bookingModel.find({doctor:doctor.id})
+         return res.json({
+            success:true,
+            message:"getting profile info",
+            data:{...rest,appointments}}) 
+
+
+    } catch (error) {
+        console.log(error);
+        res.json({ success:false,message:"Somthing went wrong can't get your profile"})
     }
 }

@@ -10,4 +10,5 @@ authRouter.post("/register", upload.single('photo'), register);
 authRouter.post("/login",login)
 
 
+
 export default authRouter;

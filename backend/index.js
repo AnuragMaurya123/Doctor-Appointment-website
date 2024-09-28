@@ -18,7 +18,9 @@ connectCloudinary()
 const app=express()
 const port=process.env.PORT || 8000
 const corsOption={
-    origin:true
+    origin: 'http://localhost:5173', // Change to your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
 }
 
 app.get("/",(req,res)=>{

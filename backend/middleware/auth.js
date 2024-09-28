@@ -8,7 +8,7 @@ export const authenticate=(req,res,next)=>{
 
     //checking token exists 
     if (!authToken || !authToken.startsWith('Bearer ')) {
-       return res.status(400).json({success:false,message:"Your not Authorized"}) 
+       return res.status(401).json({success:false, message:"No token, Your not Authorized"}) 
     }
 
     try {

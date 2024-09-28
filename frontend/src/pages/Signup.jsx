@@ -1,37 +1,70 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Image from "../assets/images/signup.gif"
-import avatar from "../assets/images/avatar-icon.png"
+import avatar from "../assets/images/profile.webp"
 import { Link } from 'react-router-dom'
+import axios from "axios"
+import HashLoader from "react-spinners/HashLoader"
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+import { BACKEND_URL } from '../utils/BaseUrl'
+import { AuthContext } from '../context/authContext'
 const Signup = () => {
-  const [imageAvater, setImageAvater] = useState(null)
-  const [previewImage, setPreviewImage] = useState("")
+  const navigate=useNavigate()
+  const {dispatch} =useContext(AuthContext)
+  const [imageAvater, setImageAvater] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [fromData, setFromData] = useState({
     name:"",
     email:"",
     password:"",
     role:"patient",
-    gender:"",
-    photo:imageAvater
+    gender:"male",
   })
-  
-  console.log(fromData.photo);
-  
+    
   const handleInputValue=(e)=>{
     setFromData({...fromData,[e.target.name]:e.target.value})
   }
-  const handleInputFile=(e)=>{
-   const file=e.target.files[0]
-  
-   console.log(file);
-   
-  }
+
 
   const onSubmit=async (e)=>{
     e.preventDefault();
+    setLoading(true)
+    try {
+      const inputData=new FormData()
+      inputData.append("name",fromData.name)
+      inputData.append("email",fromData.email)
+      inputData.append("password",fromData.password)
+      inputData.append("role",fromData.role)
+      inputData.append("gender",fromData.gender)
+      inputData && inputData.append("photo",imageAvater)
+
+      const response=await axios.post(BACKEND_URL+"/api/auth/register",inputData)
+  console.log(response);
+      if (response.data.success) { 
+        dispatch({
+          type:"LOGIN_SUCCESS",
+          payload:{
+            user:response.data.data,
+            role:response.data.data.role,
+            token:response.data.token,
+          }
+      })
+      setLoading(false)
+      navigate("/")
+      toast.success("Login Successfully")
+      } else {
+       toast.error(response.data.message)
+      }
+      
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message)
+    }
   }
 
 
-  return <section>
+  return (
+    <section>
     <div className="px-5 xl:px-0">
       <div className="max-w-[1170px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -113,14 +146,14 @@ const Signup = () => {
             <div className="mb-5 flex items-center gap-3">
               <figure className="w-[60px] h-[60px] rounded-full border-2 border-solid
                border-primaryColor flex items-center justify-center">
-                <img src={avatar} alt="" className='w-full rounded-full' />
+                <img src={imageAvater ? URL.createObjectURL(imageAvater):avatar} alt="" className='w-full rounded-full' />
                </figure>
 
                <div className="relative w-[130px] h-[50px]">
                 <input 
                 type="file" 
                 name='photo' 
-                onChange={handleInputFile}
+                onChange={(e)=>setImageAvater(e.target.files[0])}
                 id='customFile' 
                 accept='.jpg, .png'
                 className='absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer'
@@ -134,7 +167,7 @@ const Signup = () => {
             <div className="mt-7">
           <button className="w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg py-3 px-4"
              type="submit">
-              Register
+             {loading? <HashLoader size={50} color='#fff'/>: "Register"}
               </button>
           </div>
 
@@ -148,6 +181,7 @@ const Signup = () => {
       </div>
     </div>
   </section>
+  )
 }
 
 export default Signup
