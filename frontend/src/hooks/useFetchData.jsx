@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
+import { toast } from 'react-toastify';
 
 
 const useFetchData = (url) => {
@@ -22,20 +23,27 @@ useEffect(() => {
       })
       
       setData(response.data.data)
-      setLoading(false)   
     
   } catch (error) {
-    setError(error.response.data.message+"🔌")
-    setLoading(false)
+    if (error.message === "Request failed with status code 401") {
+      console.log(error);
+      toast.error(error.response.data.message)
+    }else{
+    toast.error(error.message)
+    setError(error.message)
+    console.log(error);
+    }
+  }finally{
+    setLoading(false)  
   }
    
   }
   fetchData()
 }, [url,token])
 
-  return{
-    data,loading,error
-  }
+      return{
+        data,loading,error
+      }
 }
 
 export default useFetchData

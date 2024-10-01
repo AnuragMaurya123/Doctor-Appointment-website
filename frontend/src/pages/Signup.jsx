@@ -39,7 +39,7 @@ const Signup = () => {
       inputData && inputData.append("photo",imageAvater)
 
       const response=await axios.post(BACKEND_URL+"/api/auth/register",inputData)
-  console.log(response);
+  
       if (response.data.success) { 
         dispatch({
           type:"LOGIN_SUCCESS",
@@ -49,7 +49,6 @@ const Signup = () => {
             token:response.data.token,
           }
       })
-      setLoading(false)
       navigate("/")
       toast.success("Login Successfully")
       } else {
@@ -59,7 +58,9 @@ const Signup = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.message)
-    }
+    }finally {
+      setLoading(false);
+  }
   }
 
 
@@ -167,7 +168,7 @@ const Signup = () => {
             <div className="mt-7">
           <button className="w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg py-3 px-4"
              type="submit">
-             {loading? <HashLoader size={50} color='#fff'/>: "Register"}
+             {loading? <HashLoader size={30} color='#fff'/>: "Register"}
               </button>
           </div>
 

@@ -10,7 +10,10 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
     <AuthContextProvider>
-    <ToastContainer className={"z-[99999999999]"}/>
+    <ToastContainer 
+      position="top-right" 
+      toastStyle={{ zIndex: 999999999999, position: "fixed" }}
+    />
     <App />
     </AuthContextProvider>
     </BrowserRouter>

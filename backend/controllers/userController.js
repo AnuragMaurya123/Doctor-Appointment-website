@@ -4,13 +4,7 @@ import doctorModel from "../models/doctorModel.js";
 import { v2 as cloudinary } from 'cloudinary';
 import mongoose from 'mongoose'; // Ensure mongoose is imported
 import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
 
-const createjwt = (user) => {
-    return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET,{
-        expiresIn:"15d"
-    });
-}
 export const updateUser = async (req, res) => {
     const id = req.params.id;
 
@@ -20,8 +14,8 @@ export const updateUser = async (req, res) => {
     }
 
     // Check if user exists
-    const isUserExists = await userModel.findById(id);
-    if (!isUserExists) {
+    const user = await userModel.findById(id);
+    if (!user) {
         return res.status(404).json({ success: false, message: "User not found" });
     }
 
@@ -29,33 +23,44 @@ export const updateUser = async (req, res) => {
         // Pick only the fields that can be updated
         const { name, email, password, gender, bloodType } = req.body;
         const photo = req.file;
+
+        const updateData={}
        
         if (photo) {
             // Extract public ID from the existing photo URL
-            const publicId = isUserExists.photo.split('/').pop().split('.')[0];
+            const publicId = user.photo.split('/').pop().split('.')[0];
             await cloudinary.uploader.destroy(publicId);
             
             // Upload the new image
             const newPhoto = await cloudinary.uploader.upload(photo.path, { resource_type: "image" });
-
+            
+            
             // Update the photo field with the new secure URL
-            isUserExists.photo = newPhoto.secure_url;
+            updateData.photo = newPhoto.secure_url;
         }
-         //checking password length is more 8 char
+         if (password) {
+            //checking password length is more 8 char
          if (password.length<8) {
             return res.status(400).json({message:"Your Password should have 8 letter"})
         }
-        if (password) {
-            const salt = await bcrypt.genSalt(10)
-        const hashingPassword= await bcrypt.hash(password,salt)
-        isUserExists.password = hashingPassword
-        }
         
+        const salt = await bcrypt.genSalt(10)
+        const hashingPassword= await bcrypt.hash(password,salt)
+        updateData.password = hashingPassword
+       
+        }
+        console.log(user.photo);
+        
+       // Update other fields only if they are provided
+       if (name) updateData.name = name;
+       if (email) updateData.email = email;
+       if (gender) updateData.gender = gender;
+       if (bloodType) updateData.bloodType = bloodType;
 
         // Update user details
         const updatedUser = await userModel.findByIdAndUpdate(
             id,
-            { $set: { name, email, password:isUserExists.password, gender, photo:isUserExists.photo, bloodType } }, // Set the updated photo URL here
+            { $set: updateData}, // Set the updated photo URL here
             { new: true } // Return the updated user
         );
 
@@ -63,8 +68,7 @@ export const updateUser = async (req, res) => {
         if (!updatedUser) {
             return res.status(404).json({ success: false, message: "User not found" });
         }
-        const token = createjwt(updatedUser)
-        res.status(200).json({ success: true, message: "Successfully Updated", data: updatedUser ,token});
+        res.status(200).json({ success: true, message: "Successfully Updated", data: updatedUser });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Server error, could not update user" });

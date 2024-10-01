@@ -1,16 +1,19 @@
 import React, { useContext, useState } from 'react';
-import image from "../../assets/images/doctor-img01.png";
 import { AuthContext } from '../../context/authContext';
 import MyBooking from './MyBooking';
 import ProfileSetting from './ProfileSetting';
 import useFetchData from '../../hooks/useFetchData';
 import { BACKEND_URL } from '../../utils/BaseUrl';
 import Loading from '../../component/Loading/Loading';
-import Errorl from '../../component/Error/Error';
+import Error from '../../component/Error/Error';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import HashLoader from 'react-spinners/HashLoader';
 
 const MyAccount = () => {
-  const [toggle, settoggle] = useState(true);
-  const { dispatch } = useContext(AuthContext);
+  const [toggle, settoggle] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const { dispatch,token} = useContext(AuthContext);
   const { data:user, loading, error } = useFetchData(`${BACKEND_URL}/api/users/profile/me`);
 
   // Function to handle user logout
@@ -18,16 +21,42 @@ const MyAccount = () => {
     dispatch({ type: "LOGOUT" });
   };
 
+
+  const deleteUser=async (id)=>{
+    setDeleteLoading(true)
+   try {
+    const response=await axios.delete(`${BACKEND_URL}/api/users/${id}`,{
+      headers:{
+        'Authorization': `Bearer ${token}` 
+      }
+    })
+    if (response.data.success) {
+      dispatch({
+         type: "LOGOUT" 
+      })
+      toast.success(response.data.message)
+    }
+   } catch (error) {
+      console.log(error);
+      toast.error(error.message)
+   }finally {
+    setDeleteLoading(false);
+}
+    
+  } 
+
+ 
+
   return (
     <div className='max-w-[1170px] mt-16 mx-auto px-5'>
       {loading && !error && <Loading />}
-      {error && !loading && <Errorl errorMessage={error} />}
+      {error && !loading && <Error errorMessage={error} />}
       {!loading && !error && (
         <div className="grid md:grid-cols-3 gap-10">
           <div className="pb-[50px] px-[30px] rounded-md">
             <div className="flex items-center justify-center">
               <figure className="w-[100px] h-[100px] rounded-full border-2 border-solid border-primaryColor ">
-                <img src={image} alt="User Profile" className="w-full h-full rounded-full" />
+                <img src={user.photo} alt="User Profile" className="w-full h-full rounded-full" />
               </figure>
             </div>
             <div className="text-center mt-4">
@@ -42,7 +71,7 @@ const MyAccount = () => {
             </div>
             <div className="mt-[50px] md:mt-[100px]">
               <button onClick={handleLogout} className="w-full bg-[#181A1E] p-3 text-[16px] rounded-md leading-7 text-white">Logout</button>
-              <button className="w-full bg-red-600 p-3 text-[16px] rounded-md leading-7 mt-4 text-white">Delete Account</button>
+              <button onClick={()=>deleteUser(user._id)}  className="w-full bg-red-600 p-3 text-[16px] rounded-md leading-7 mt-4 text-white"> {deleteLoading ? <HashLoader size={50} color='#fff'/>: " Delete Account"}</button>
             </div>
           </div>
           <div className="md:col-span-2 md:px-[30px]">

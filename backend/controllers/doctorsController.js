@@ -1,16 +1,74 @@
 import bookingModel from "../models/bookingModel.js";
 import doctorModel from "../models/doctorModel.js";
+import { v2 as cloudinary } from 'cloudinary';
+import mongoose from 'mongoose'; // Ensure mongoose is imported
+import bcrypt from "bcryptjs"
 
 //creating function for updating doctor
 export const updatedoctor=async (req,res)=>{
     const id = req.params.id
+    // Check if user exists
+    const doctor = await doctorModel.findById(id);
+    if (!doctor) {
+        return res.status(404).json({ success: false, message: "User not found" });
+    }
     try {
-        //updating doctor data by id
-        const updateddoctor=await doctorModel.findByIdAndUpdate(id,{$set:req.body},{new:true});
-        res.status(200).json({success:true,message:"Successfully Updated",data:updateddoctor})
+         // Pick only the fields that can be updated
+         const { name, email, password, gender, phone,ticketPrice,specialization, qualifications,experiences,bio,about,timeSlots} = req.body;
+         const photo = req.file;
+
+         const updateData={}
+
+         if (photo) {
+            // Extract public ID from the existing photo URL
+            const publicId = doctor.photo.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(publicId);
+            
+            // Upload the new image
+            const newPhoto = await cloudinary.uploader.upload(photo.path, { resource_type: "image" });
+
+            // Update the photo field with the new secure URL
+            updateData.photo = newPhoto.secure_url;
+        }
+         if (password) {
+            //checking password length is more 8 char
+         if (password.length<8) {
+            return res.status(400).json({message:"Your Password should have 8 letter"})
+        }
+        
+        const salt = await bcrypt.genSalt(10)
+        const hashingPassword= await bcrypt.hash(password,salt)
+        updateData.password = hashingPassword
+       
+        }
+      
+          // Update other fields only if they are provided
+       if (name) updateData.name = name;
+       if (email) updateData.email = email;
+       if (gender) updateData.gender = gender;
+       if (phone) updateData.phone = phone;
+       if (ticketPrice) updateData.ticketPrice = ticketPrice;
+       if (specialization) updateData.specialization = specialization;
+       if (qualifications) updateData.qualifications = qualifications;
+       if (experiences) updateData.experiences = experiences;
+       if (bio) updateData.bio = bio;
+       if (about) updateData.about = about;
+       if (timeSlots) updateData.timeSlots = timeSlots;
+        
+        
+        // Update doctor details
+        const updateddoctor = await doctorModel.findByIdAndUpdate(
+            id,
+            { $set: updateData}, // Set the updated photo URL here
+            { new: true } // Return the updated user
+        );
+
+        const {password:_,...rest}=updateddoctor._doc
+
+        res.status(200).json({success:true,message:"Successfully Updated",data:{...rest}})
     } catch (error) {
         console.log(error);
-        res.json({ success:false,message:error})
+        res.json({ success:false,message:"Internal Server Error"})
     }
 }
 

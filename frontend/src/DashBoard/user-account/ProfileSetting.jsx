@@ -9,14 +9,13 @@ import { useNavigate } from 'react-router-dom';
 const ProfileSetting = ({user}) => {
   const navigate=useNavigate()
     const { token,dispatch } = useContext(AuthContext);
-    const [imageAvater, setImageAvater] = useState();
+    const [imageAvater, setImageAvater] = useState(false);
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [gender, setGender] = useState("male");
     const [password, setPassword] = useState("");
     const [bloodType, setBloodType] = useState("");
-  console.log(user);
   
     useEffect(() => {
         setName(user?.name || ""); 
@@ -37,7 +36,7 @@ const ProfileSetting = ({user}) => {
           inputData.append("bloodType",bloodType)
           inputData && inputData.append("photo",imageAvater)
 
-            const response = await axios.putForm(
+            const response = await axios.put(
                 `${BACKEND_URL}/api/users/${user._id}`,
                 inputData,
                 {
@@ -48,8 +47,7 @@ const ProfileSetting = ({user}) => {
                 }
             );
 
-            console.log("Response received:", response);
-
+            
             if (response.data.success) {
                 toast.success(response.data.message || "Profile updated successfully");
                 dispatch({
@@ -57,7 +55,7 @@ const ProfileSetting = ({user}) => {
                   payload:{
                     user:response.data.data,
                     role:response.data.data.role,
-                    token:response.data.token
+                    token:token
                   }
                 })
                 navigate(`/users/profile/${response.data.data.name}`)
@@ -66,9 +64,15 @@ const ProfileSetting = ({user}) => {
                 toast.error(response.data.message || "Failed to update profile");
             }
         } catch (error) {
-            console.error("Update error:", error.response ? error.response.data : error.message);
-            const errorMessage = error.response?.data?.message || "Error updating profile";
-            toast.error(`Error: ${errorMessage}`);
+            if (error.message === "Request failed with status code 401") {
+                console.log(error);
+                toast.error(error.response.data.message)
+                setError(error.response.data.message)
+              }else{
+              toast.error(error.message)
+              setError(error.message)
+              console.log(error);
+              }
         } finally {
             setLoading(false);
         }
@@ -87,7 +91,7 @@ const ProfileSetting = ({user}) => {
                     name='name' 
                     value={name} 
                     onChange={(e) => setName(e.target.value)}
-                    required
+                   
                 />
             </div>
             <div className="mb-5">
@@ -101,7 +105,9 @@ const ProfileSetting = ({user}) => {
                     name='email' 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)}
-                    required
+                    aria-readonly
+                    readOnly
+                  
                 />
             </div>
 
@@ -109,14 +115,14 @@ const ProfileSetting = ({user}) => {
                 <input
                     autoComplete='on' 
                     type="password" 
-                    placeholder='Enter your password' 
+                    placeholder='Enter new password to change' 
                     className='w-full mb-2 pr-3 py-3 border-b border-solid border-[#0066ff61] focus:outline-none
                     focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor 
                     cursor-pointer'
                     name='password' 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)}
-                    required
+                   
                 />
             </div>
 
@@ -131,7 +137,7 @@ const ProfileSetting = ({user}) => {
                     name='bloodType' 
                     value={bloodType} 
                     onChange={(e) => setBloodType(e.target.value)}
-                    required
+                   
                 />
             </div>
 
@@ -146,8 +152,14 @@ const ProfileSetting = ({user}) => {
                     </select>
                 </label>
             </div>
+            
 
             <div className="mb-5 flex items-center gap-3">
+           {imageAvater &&  <figure className="w-[60px] h-[60px] rounded-full border-2 border-solid
+               border-primaryColor flex items-center justify-center">
+                <img src={ URL.createObjectURL(imageAvater)} alt="" className='w-full rounded-full' />
+               </figure>
+           }
                 <div className="relative w-[130px] h-[50px]">
                     <input 
                         type="file" 

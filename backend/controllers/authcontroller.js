@@ -65,7 +65,6 @@ export const register=async(req,res)=>{
             photo: uploadResult.secure_url,
             gender,
         };
-        console.log(userData.photo);
         
         let newUser=null
         //creating new user or new doctors Account 

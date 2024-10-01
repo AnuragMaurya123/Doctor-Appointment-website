@@ -28,9 +28,7 @@ const Login = () => {
     setLoading(true)
     try {
       const response=await axios.post(BACKEND_URL+"/api/auth/login",formData)
-      console.log(response);
-      
-      
+
     if(response.data.success){
         dispatch({
             type:"LOGIN_SUCCESS",
@@ -40,7 +38,6 @@ const Login = () => {
               token:response.data.token,
             }
         })
-        setLoading(false)
         navigate("/")
         toast.success("Login Successfully")
     }else{
@@ -49,7 +46,9 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       toast.error(error.message)
-    }
+    }finally {
+      setLoading(false);
+  }
   }
   return (
     <section className='px-5 lg:px-0'>
