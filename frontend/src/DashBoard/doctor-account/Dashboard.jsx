@@ -1,20 +1,18 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import useFetchData from '../../hooks/useFetchData';
 import { BACKEND_URL } from '../../utils/BaseUrl';
 import Loading from '../../component/Loading/Loading';
 import Error from '../../component/Error/Error';
-import { toast } from 'react-toastify';
 import Tabs from './Tabs';
 import DoctorsAbout from '../../pages/Doctors/DoctorsAbout';
 import Profile from './Profile';
+import Appointment from './Appointment';
 
 
 const Dashboard = () => {
   const [tabs, setTabs] = useState("overview")
   const {data:doctor,loading,error}=useFetchData(`${BACKEND_URL}/api/doctors/profile/me`)
-  console.log(doctor);
-
-  
+ 
   return (
     <div className='max-w-[1170px] px-5 mx-auto my-14'>
       {loading && error && <Loading/>}
@@ -23,7 +21,7 @@ const Dashboard = () => {
         <div className='grid lg:grid-cols-3 gap-[30px] lg:gap-[50px]'>
             <Tabs tabs={tabs} setTabs={setTabs} doctor={doctor}/>
             <div className="lg:col-span-2">
-               {doctor.isApproved =="pending" && (
+               {doctor.isApproved ==="pending" && (
                 <div className="flex p-4 mb-4 text-yellow-600 bg-yellow-50 items-center rounded-lg  gap-2">
                   <svg className="flex-shrink-0 w-5"  fill="#b8a442" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"  viewBox="0 0 478.125 478.125" xmlSpace="preserve" stroke="#b8a442">
                     <g id="SVGRepo_bgCarrier" strokeWidth="0"/>
@@ -73,7 +71,7 @@ const Dashboard = () => {
                   />
               </>) }
               {tabs==="appointments" && (
-                <div className="">a</div>
+                <Appointment Appointment={doctor.appointments}/>
               ) }
               {tabs==="profile" && (
                 <Profile doctor={doctor} />

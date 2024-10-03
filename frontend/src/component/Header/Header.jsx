@@ -77,10 +77,10 @@ const Header = () => {
           {
             user && token ? (
             <div >
-            <Link  className=' flex gap-2 justify-between items-center order-2' to={`${role === "patient" ? `/users/profile/${user.name}`:`/doctors/profile/${user.name}`}`}>
-            <h3 className="text-[16px] font-semibold text-headingColor">{user.name}</h3>
+            <Link  className=' flex gap-2 justify-between items-center order-2' to={`${role === "patient" ? `/users/profile/${user?.name}`:`/doctors/profile/${user?.name}`}`}>
+           
             <figure className='w-[35px] h-[35px] rounded-full cursor-pointer'>
-              <img src={user.photo} className='w-full rounded-full' alt="" />
+              <img src={user?.photo} className='w-full rounded-full' alt="" />
             </figure>
            
             </Link>

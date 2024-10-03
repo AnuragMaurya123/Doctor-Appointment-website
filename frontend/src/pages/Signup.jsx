@@ -50,7 +50,7 @@ const Signup = () => {
           }
       })
       navigate("/")
-      toast.success("Login Successfully")
+      toast.success("Register & Login Successfully ")
       } else {
        toast.error(response.data.message)
       }

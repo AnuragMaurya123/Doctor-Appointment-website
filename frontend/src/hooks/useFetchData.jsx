@@ -1,11 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { AuthContext } from '../context/authContext';
 import { toast } from 'react-toastify';
 
 
 const useFetchData = (url) => {
-const {token} = useContext(AuthContext)
+const token=localStorage.getItem("token")
+const user=localStorage.getItem("user")
+
 const [data, setData] = useState([])
 const [error, setError] = useState(null)
 const [loading, setLoading] = useState(false)
@@ -22,7 +24,9 @@ useEffect(() => {
       }
       })
       
-      setData(response.data.data)
+    
+        setData(response.data.data)
+    
     
   } catch (error) {
     if (error.message === "Request failed with status code 401") {
@@ -39,7 +43,7 @@ useEffect(() => {
    
   }
   fetchData()
-}, [url,token])
+}, [url,token,user])
 
       return{
         data,loading,error

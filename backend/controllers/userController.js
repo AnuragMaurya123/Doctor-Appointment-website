@@ -49,7 +49,6 @@ export const updateUser = async (req, res) => {
         updateData.password = hashingPassword
        
         }
-        console.log(user.photo);
         
        // Update other fields only if they are provided
        if (name) updateData.name = name;
@@ -95,7 +94,7 @@ export const getSingleUser=async (req,res)=>{
     try {
          //finding user by id and getting user data escape password
         const singleUser=await userModel.findById(id).select("-password");
-        console.log(singleUser);
+        
         
         res.status(200).json({success:true,message:"User Found ",data:singleUser})
     } catch (error) {
@@ -119,10 +118,10 @@ export const getAllUser=async (req,res)=>{
 
 export const getUserProfile=async (req,res)=>{
     //getting userIg from middleware
-    const userId =req.userId
+    const userId =req.UserId
     try {
        //finding user profile 
-       const user = await userModel.findOne({userId})
+       const user = await userModel.findOne({_id:userId})
       
           // if user not found
         if (!user) {

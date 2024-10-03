@@ -2,7 +2,7 @@ import React from 'react'
 import { formData } from '../../utils/fromData'
 
 const DoctorsAbout = ({name,about,qualifications,experiences}) => {
-    console.log(experiences);
+   
     
   return (
     <div>

@@ -76,6 +76,7 @@ export const register=async(req,res)=>{
  
         //creating User with jwt token
         const token = createjwt(newUser)
+        console.log(token)
         //passing the date of user escape password
         const {password:_,appointments,...rest}=newUser._doc
         res.json({

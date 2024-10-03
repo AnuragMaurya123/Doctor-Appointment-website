@@ -55,7 +55,7 @@ const ProfileSetting = ({user}) => {
                   payload:{
                     user:response.data.data,
                     role:response.data.data.role,
-                    token:token
+                    token:response.data.token,
                   }
                 })
                 navigate(`/users/profile/${response.data.data.name}`)

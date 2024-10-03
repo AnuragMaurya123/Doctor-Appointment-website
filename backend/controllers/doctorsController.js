@@ -1,8 +1,15 @@
 import bookingModel from "../models/bookingModel.js";
 import doctorModel from "../models/doctorModel.js";
 import { v2 as cloudinary } from 'cloudinary';
-import mongoose from 'mongoose'; // Ensure mongoose is imported
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
+
+const createjwt = (user) => {
+    return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET,{
+        expiresIn:"15d"
+    });
+}
+
 
 //creating function for updating doctor
 export const updatedoctor=async (req,res)=>{
@@ -56,16 +63,18 @@ export const updatedoctor=async (req,res)=>{
        if (timeSlots) updateData.timeSlots = timeSlots;
         
         
+        
         // Update doctor details
         const updateddoctor = await doctorModel.findByIdAndUpdate(
             id,
             { $set: updateData}, // Set the updated photo URL here
             { new: true } // Return the updated user
         );
-
+    
+        const token =createjwt(updateddoctor)
         const {password:_,...rest}=updateddoctor._doc
 
-        res.status(200).json({success:true,message:"Successfully Updated",data:{...rest}})
+        res.status(200).json({success:true,message:"Successfully Updated",data:{...rest},token})
     } catch (error) {
         console.log(error);
         res.json({ success:false,message:"Internal Server Error"})
@@ -102,7 +111,7 @@ export const getSingledoctor=async (req,res)=>{
 export const getAlldoctor=async (req,res)=>{
     try {
 
-        const {query} =req.body
+        const {query} =req.query
         let alldoctor;
         if(query){
             alldoctor=await doctorModel.find({
@@ -110,10 +119,11 @@ export const getAlldoctor=async (req,res)=>{
                 $or:[  //applying OR condition
                     {name:{$regex:query,$options:"i"}}, // Case-insensitive search on the name field
                     {specialization:{$regex:query,$options:"i"}}, // Case-insensitive search on the specialization field
-                ]}).select("-password")
+                ]}).select("-password")                
         }else{
             //only getting approved doctor
             alldoctor=await doctorModel.find({isApproved:"approved"}).select("-password");
+          
         }
          
         res.status(200).json({success:true,message:"doctors Found ",data:alldoctor})
@@ -125,17 +135,22 @@ export const getAlldoctor=async (req,res)=>{
 
 export const getDoctorProfile=async (req,res)=>{
     //getting userIg from middleware
-    const doctorId =req.userId
+    const doctorId =req.UserId
+    
+    
     try {
        //finding user profile 
-       const doctor = await doctorModel.findOne({doctorId})
-      
+       const doctor = await doctorModel.findOne({_id:doctorId})
+       
           // if user not found
         if (!doctor) {
             return res.json({success:false,message:"doctor not found"}) 
          }
        
          const {password:_,...rest}=doctor._doc
+         console.log(doctor._doc);
+         
+         
          const appointments=await bookingModel.find({doctor:doctor.id})
          return res.json({
             success:true,

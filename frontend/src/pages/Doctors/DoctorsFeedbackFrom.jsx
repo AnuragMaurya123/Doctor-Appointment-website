@@ -1,14 +1,53 @@
 import React, { useState } from 'react'
 import { AiFillStar } from 'react-icons/ai'
-
+import { BACKEND_URL } from '../../utils/BaseUrl';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import HashLoader from 'react-spinners/HashLoader';
 const DoctorsFeedbackFrom = () => {
 
     const [rating, setRating] = useState(0)
     const [hover, setHover] = useState(0)
     const [reviewText, setReviewText] = useState("")
+    const [loading, setLoading] = useState(false)
+    const {id}=useParams()
+    const token=localStorage.getItem("token")
+    console.log(id);
+    console.log(token);
 
+    
     const onSubmit=async (e)=>{
         e.preventDefault();
+        setLoading(true)
+        try {
+          if (!rating || !reviewText) {
+            setLoading(false)
+            toast.error("Rating & Review Both Are Required")
+           
+          }
+          const response = await axios.post(`${BACKEND_URL}/api/doctors/${id}/reviews`,{rating,reviewText},{
+            headers: {
+              'Authorization': `Bearer ${token}` 
+          }
+          })
+          console.log(response);
+          
+          toast.success(response.data.message)
+          setLoading(false)
+          
+        } catch (error) {
+          if (error.message === "Request failed with status code 401") {
+            console.log(error);
+            toast.error(error.response.data.message)
+           
+          }else{
+          toast.error(error.message)
+          setError(error.message)
+          console.log(error);
+         
+          }
+        }
     }
      
   return (
@@ -48,7 +87,7 @@ const DoctorsFeedbackFrom = () => {
             <textarea className='border border-solid border-[#0066ff34] focus:outline outline-primaryColor
             w-full px-4 py-3 rounded-md' rows={5} placeholder='Write your message'
              value={reviewText} onChange={(e)=>setReviewText(e.target.value)}></textarea>
-             <button className="btn" type='submit'>Submit Feedback</button>
+             <button className="btn" type='submit'>{loading ?  <HashLoader size={25} color='#FFF'/>:"Submit Feedback"}</button>
         </div>
     </form>
   )

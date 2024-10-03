@@ -4,7 +4,7 @@ import useFetchData from "../../hooks/useFetchData"
 import Error from "../../component/Error/Error"
 import Loading from "../../component/Loading/Loading"
 import Errorl from '../../component/Error/Error'
-import { useEffect } from "react"
+
 
 const MyBooking = () => {
   const {data:appointment ,loading, error}=useFetchData(BACKEND_URL+"/api/users/appointment/my-appointment")
