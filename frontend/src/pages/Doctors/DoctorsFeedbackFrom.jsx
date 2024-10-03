@@ -13,8 +13,7 @@ const DoctorsFeedbackFrom = () => {
     const [loading, setLoading] = useState(false)
     const {id}=useParams()
     const token=localStorage.getItem("token")
-    console.log(id);
-    console.log(token);
+
 
     
     const onSubmit=async (e)=>{

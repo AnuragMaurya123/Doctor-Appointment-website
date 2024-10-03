@@ -12,12 +12,20 @@ import Appointment from './Appointment';
 const Dashboard = () => {
   const [tabs, setTabs] = useState("overview")
   const {data:doctor,loading,error}=useFetchData(`${BACKEND_URL}/api/doctors/profile/me`)
- 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <Error error={error} />;
+  }
+
+  if (!doctor) {
+    return <p>No doctor details available.</p>;
+  }
   return (
     <div className='max-w-[1170px] px-5 mx-auto my-14'>
-      {loading && error && <Loading/>}
-      {error && !loading && <Error error={error}/>}
-      {!loading && !error && (
+  
         <div className='grid lg:grid-cols-3 gap-[30px] lg:gap-[50px]'>
             <Tabs tabs={tabs} setTabs={setTabs} doctor={doctor}/>
             <div className="lg:col-span-2">
@@ -79,7 +87,7 @@ const Dashboard = () => {
              </div>
               </div>
         </div>
-      )}
+
     </div>
   )
 }

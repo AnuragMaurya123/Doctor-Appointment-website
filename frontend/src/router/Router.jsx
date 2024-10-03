@@ -10,6 +10,7 @@ import Services from '../pages/Services'
 import Dashboard from "../DashBoard/doctor-account/Dashboard"
 import MyAccount from "../DashBoard/user-account/MyAccount"
 import ProtectedRoutes from './ProtectedRoutes'
+import CheckoutSuccess from '../pages/Doctors/CheckoutSuccess'
 const Router = () => {
   return (
     <div>
@@ -23,6 +24,7 @@ const Router = () => {
         <Route path='/login' element={<Login/>}/>
         <Route path='/register' element={<Signup/>}/>
         <Route path='/services' element={<Services/>}/>
+        <Route path='/checkout-success' element={<CheckoutSuccess/>}/>
         <Route path='/doctors/profile/:name' element={<ProtectedRoutes  allowedRoles={"doctor"}><Dashboard/></ProtectedRoutes>}/>
         <Route path='/users/profile/:name' element={<ProtectedRoutes  allowedRoles={"patient"}><MyAccount/></ProtectedRoutes>}/>
       </Routes>

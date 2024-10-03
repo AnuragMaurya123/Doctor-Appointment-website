@@ -3,7 +3,7 @@ import starIcon from "../../assets/images/Star.png";
 import DoctorsAbout from "./DoctorsAbout";
 import DoctorsFeedback from "./DoctorsFeedback";
 import Slidebar from "./Slidebar";
-import axios from "axios";
+
 import { BACKEND_URL } from "../../utils/BaseUrl";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -23,12 +23,19 @@ const DoctorsDetails = () => {
       setError(null); // Clear previous error before fetching
 
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/doctors/${doctorId}`);
-        if (response.data.success) {
-          setDoctor(response.data.data);
-        } else {
-          setError("Failed to load doctor details.");
-        }
+        const response =await fetch(`${BACKEND_URL}/api/doctors/${doctorId}`,{
+          method:"Get",
+          headers:{
+            "Content-Type":"application/json",
+          }
+        })
+        const data=await response.json()
+        console.log(data);
+        
+        setTimeout(() => {
+          setDoctor(data.data)
+          setLoading(false)  
+         }, 1000);
       } catch (error) {
         setError(error.message || "Something went wrong.");
         toast.error(error.message || "An error occurred while fetching doctor details.");
@@ -42,7 +49,7 @@ const DoctorsDetails = () => {
   
 
   // Conditionally render content
-  if (loading) {
+  if (loading|| !doctor) {
     return <Loading />;
   }
 
@@ -50,9 +57,6 @@ const DoctorsDetails = () => {
     return <Error error={error} />;
   }
 
-  if (!doctor) {
-    return <p>No doctor details available.</p>;
-  }
 
   return (
     <section>

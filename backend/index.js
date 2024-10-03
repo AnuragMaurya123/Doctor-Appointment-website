@@ -8,6 +8,7 @@ import authRouter from "./routers/authRouter.js"
 import userRouter from "./routers/userRouter.js"
 import doctorRouter from "./routers/doctorRouter.js"
 import reviewsRouter from "./routers/reviewRouter.js"
+import bookingRouter from "./routers/bookingRouter.js"
 
 
 
@@ -18,7 +19,7 @@ connectCloudinary()
 const app=express()
 const port=process.env.PORT || 8000
 const corsOption={
-    origin: 'http://localhost:5173', // Change to your frontend URL
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }
@@ -37,6 +38,7 @@ app.use("/api/auth",authRouter);
 app.use("/api/users",userRouter);
 app.use("/api/doctors",doctorRouter);
 app.use("/api/reviews",reviewsRouter);
+app.use("/api/booking",bookingRouter);
 
 
 

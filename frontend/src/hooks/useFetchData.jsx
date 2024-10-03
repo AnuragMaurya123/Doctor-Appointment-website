@@ -1,8 +1,5 @@
-import { useContext, useEffect, useState } from 'react'
-import axios from 'axios';
-import { AuthContext } from '../context/authContext';
+import {useEffect, useState } from 'react'
 import { toast } from 'react-toastify';
-
 
 const useFetchData = (url) => {
 const token=localStorage.getItem("token")
@@ -18,16 +15,18 @@ useEffect(() => {
     setError(null)
   try {
 
-      const response =await axios.get(url ,{
-        headers: {
-          'Authorization': `Bearer ${token}` 
-      }
+      const response =await fetch(url,{
+        method:"GET",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization":`Bearer ${token}`
+        }
       })
-      
-    
-        setData(response.data.data)
-    
-    
+      const data = await response.json();
+     setTimeout(() => {
+      setData(data.data)
+      setLoading(false)  
+     }, 700);
   } catch (error) {
     if (error.message === "Request failed with status code 401") {
       console.log(error);
@@ -37,8 +36,6 @@ useEffect(() => {
     setError(error.message)
     console.log(error);
     }
-  }finally{
-    setLoading(false)  
   }
    
   }

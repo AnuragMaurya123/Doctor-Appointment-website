@@ -1,7 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react'
 import convertedTime from '../../utils/convertedTime'
+import { BACKEND_URL } from '../../utils/BaseUrl'
+import { toast } from 'react-toastify';
 
-const Slidebar = ({timeSolts,price}) => {
+const Slidebar = ({timeSolts,price,DoctorId}) => {
+   console.log(DoctorId);
+   
+   const [loading, setLoading] = useState(false)
+   const token=localStorage.getItem("token")
+   console.log(token);
+   const handlebooking=async(e)=>{
+      e.preventDefault();
+      setLoading(true)
+      try {
+         const response =await fetch(`${BACKEND_URL}/api/booking/checkout-session/${DoctorId}`,{
+            method:"post",
+            headers:{
+               "Authorization":`Bearer ${token}`
+            }            
+          })
+          const data=await response.json()
+          if (!response.ok) {
+            throw new Error(data.message+"please try again")
+          }
+          if (!data.success) {
+           toast.error(data.message)
+          }
+          if (data.session.url) {
+            window.location.href=data.session.url
+          }
+      } catch (error) {
+         console.log(error);
+         toast.error(error.message)
+      }
+   }
+
   return (
    
         <div className='shadow-panelShadow p-3 lg:p-5 rounded-md'>
@@ -27,7 +60,7 @@ const Slidebar = ({timeSolts,price}) => {
             </div>
         )}      
         </ul>
-        <button className="btn px-2 w-full rounded-md">Book Appointment</button>
+        <button onClick={handlebooking} className="btn px-2 w-full rounded-md">Book Appointment</button>
      </div>
     </div>
   )
