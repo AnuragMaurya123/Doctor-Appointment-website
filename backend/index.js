@@ -10,40 +10,36 @@ import doctorRouter from "./routers/doctorRouter.js"
 import reviewsRouter from "./routers/reviewRouter.js"
 import bookingRouter from "./routers/bookingRouter.js"
 
-
-
 dotenv.config()
 connectDB()
 connectCloudinary()
 
-const app=express()
-const port=process.env.PORT || 8000
-const corsOption={
-    origin: 'http://localhost:5173',
+const app = express()
+const port = process.env.PORT || 8000
+
+// CORS configuration allowing both local and production URLs
+const corsOption = {
+    origin: ['http://localhost:5173', 'https://doctor-appointment-website-zmgw.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }
 
-app.get("/",(req,res)=>{
-    res.send("Api is Working")
+app.get("/", (req, res) => {
+    res.send("API is Working")
 })
 
-//middleware
+// Middleware
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors(corsOption))
 
-//api endpoint
-app.use("/api/auth",authRouter);
-app.use("/api/users",userRouter);
-app.use("/api/doctors",doctorRouter);
-app.use("/api/reviews",reviewsRouter);
-app.use("/api/booking",bookingRouter);
+// API Endpoints
+app.use("/api/auth", authRouter)
+app.use("/api/users", userRouter)
+app.use("/api/doctors", doctorRouter)
+app.use("/api/reviews", reviewsRouter)
+app.use("/api/booking", bookingRouter)
 
-
-
-
-
-app.listen(port,()=>{
-    console.log("server is running "+ port)
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
 })
