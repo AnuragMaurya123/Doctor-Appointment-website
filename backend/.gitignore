@@ -9,18 +9,17 @@ lerna-debug.log*
 
 # Dependency directories
 node_modules
+dist
+dist-ssr
 
-
-# Environment and local environment-specific files
-*.env
+# Environment and local files
 *.local
-.env.local
-.env.*.local
+*.env
 
 # Editor directories and files
-.vscode/*
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
