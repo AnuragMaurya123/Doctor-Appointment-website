@@ -17,12 +17,7 @@ connectCloudinary()
 const app = express()
 const port = process.env.PORT || 8000
 
-// CORS configuration allowing both local and production URLs
-const corsOption = {
-    origin: ['*'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-}
+
 
 app.get("/", (req, res) => {
     res.send("API is Working")
@@ -31,7 +26,7 @@ app.get("/", (req, res) => {
 // Middleware
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors(corsOption))
+app.use(cors())
 
 // API Endpoints
 app.use("/api/auth", authRouter)
