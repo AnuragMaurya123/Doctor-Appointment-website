@@ -19,7 +19,7 @@ const port = process.env.PORT || 8000
 
 // CORS configuration allowing both local and production URLs
 const corsOption = {
-    origin: ['http://localhost:5173', 'https://doctor-appointment-website-zmgw.vercel.app'],
+    origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }
