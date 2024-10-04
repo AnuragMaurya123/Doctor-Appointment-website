@@ -17,7 +17,12 @@ connectCloudinary()
 const app = express()
 const port = process.env.PORT || 8000
 
-
+// CORS configuration allowing both local and production URLs
+const corsOption = {
+    origin: ['http://localhost:5173', 'https://doctor-appointment-website-zmgw.vercel.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}
 
 app.get("/", (req, res) => {
     res.send("API is Working")
