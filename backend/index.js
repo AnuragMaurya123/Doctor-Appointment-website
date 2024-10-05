@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 // Middleware
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+app.use(cors(corsOption))
 
 // API Endpoints
 app.use("/api/auth", authRouter)
