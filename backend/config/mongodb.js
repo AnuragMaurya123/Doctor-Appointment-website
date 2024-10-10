@@ -1,11 +1,27 @@
 import mongoose from "mongoose";
 
-const connectDB=async ()=>{
-    mongoose.connection.on("connected",()=>{
-        console.log("databases is connected");
-        
-    })
-    await mongoose.connect(`${process.env.MONGODB_URL}/doctor-booking`)
-}
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGODB_URL, {
+            dbName: 'doctor-booking' // Set the database name directly here
+        });
 
-export default connectDB
+        mongoose.connection.on("connected", () => {
+            console.log("Database is connected");
+        });
+
+        mongoose.connection.on("error", (err) => {
+            console.error("Database connection error:", err);
+        });
+
+        mongoose.connection.on("disconnected", () => {
+            console.log("Database is disconnected");
+        });
+
+    } catch (error) {
+        console.error("Failed to connect to MongoDB:", error);
+        process.exit(1); // Exit process with failure
+    }
+};
+
+export default connectDB;

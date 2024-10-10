@@ -148,7 +148,7 @@ export const getDoctorProfile=async (req,res)=>{
          }
        
          const {password:_,...rest}=doctor._doc
-         console.log(doctor._doc);
+       
          
          
          const appointments=await bookingModel.find({doctor:doctor.id})
