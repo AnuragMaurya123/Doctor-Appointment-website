@@ -24,7 +24,7 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5174", 
+  origin:'https://doctor-appointment-website-zmgw.vercel.app',
   credentials: true,
 }));
 
