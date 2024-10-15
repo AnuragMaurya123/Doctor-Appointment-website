@@ -47,7 +47,7 @@ export const restrict = (roles) => async (req, res, next) => {
      
     // If no user found or user role is not in the allowed roles, reject access
     if (!user || !roles.includes(user.role)) {
-        return res.status(403).json({ success: false, message: "You're not authorized to access this resource" });
+        return res.status(401).json({ success: false, message: "You're not authorized to access this resource" });
     }
 
     next(); // Proceed if the user is authorized

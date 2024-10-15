@@ -10,15 +10,15 @@ const socialLink =[
     icon: <AiFillYoutube className='group-hover:text-white w-4 h-5'/>
   },
   {
-    path:"https://www.youtube.com/",
+    path:"https://www.linkedin.com/",
     icon: <RiLinkedinFill className='group-hover:text-white w-4 h-5'/>
   },
   {
-    path:"https://www.youtube.com/",
+    path:"https://www.instagram.com/",
     icon: <AiOutlineInstagram className='group-hover:text-white w-4 h-5'/>
   },
   {
-    path:"https://www.youtube.com/",
+    path:"https://github.com/join/welcome",
     icon: <AiFillGithub className='group-hover:text-white w-4 h-5'/>
   },
 ];
@@ -91,7 +91,7 @@ const Footer = () => {
         <div>
           <h2 className="text-[20px] leading-[30px] font-[700] mb-6 text-headingColor">Quick Links</h2>
           <ul>
-            {navLink02.map((link,index)=><li className='mb-4' key={index}><Link className='text-[16px] leading-7 font-[400] text-textColor' to={link.path}>{link.display}</Link></li>)}
+            {navLink01.map((link,index)=><li className='mb-4' key={index}><Link className='text-[16px] leading-7 font-[400] text-textColor' to={link.path}>{link.display}</Link></li>)}
           </ul>
         </div>
 

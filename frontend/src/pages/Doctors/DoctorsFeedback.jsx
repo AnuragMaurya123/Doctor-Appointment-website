@@ -6,7 +6,6 @@ import DoctorsFeedbackFrom from './DoctorsFeedbackFrom'
 const DoctorsFeedback = ({reviews,totalRating,DoctorId}) => {
 console.log(reviews)
     const [showFeedbackFrom, setShowFeedbackFrom] = useState(false)
-    console.log(totalRating)
   return (
     <div>
         <div className='mb-[50px]'>

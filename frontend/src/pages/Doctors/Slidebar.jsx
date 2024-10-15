@@ -4,11 +4,7 @@ import { BACKEND_URL } from '../../utils/BaseUrl'
 import { toast } from 'react-toastify';
 
 const Slidebar = ({timeSolts,price,DoctorId}) => {
-   console.log(DoctorId);
-   
-   const [loading, setLoading] = useState(false)
    const token=localStorage.getItem("token")
-   console.log(token);
    const handlebooking=async(e)=>{
       e.preventDefault();
       setLoading(true)

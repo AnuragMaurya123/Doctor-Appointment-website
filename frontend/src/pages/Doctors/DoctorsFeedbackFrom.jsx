@@ -8,6 +8,7 @@ import HashLoader from 'react-spinners/HashLoader';
 const DoctorsFeedbackFrom = () => {
 
     const [rating, setRating] = useState(0)
+    const [error,  setError] = useState(null)
     const [hover, setHover] = useState(0)
     const [reviewText, setReviewText] = useState("")
     const [loading, setLoading] = useState(false)
@@ -33,7 +34,7 @@ const DoctorsFeedbackFrom = () => {
           console.log(response);
           
           toast.success(response.data.message)
-          setLoading(false)
+        
           
         } catch (error) {
           if (error.message === "Request failed with status code 401") {
@@ -46,6 +47,8 @@ const DoctorsFeedbackFrom = () => {
           console.log(error);
          
           }
+        }finally{
+          setLoading(false)
         }
     }
      

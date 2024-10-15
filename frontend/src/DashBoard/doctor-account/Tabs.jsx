@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import HashLoader from 'react-spinners/HashLoader';
 
 const Tabs = ({tabs, setTabs, doctor}) => {
+  const [isTab, setIsTab] = useState(false)
     const [deleteLoading, setDeleteLoading] = useState(false);
   const { dispatch,token} = useContext(AuthContext);
     const handleLogout = () => {
@@ -24,7 +25,7 @@ const Tabs = ({tabs, setTabs, doctor}) => {
             'Authorization': `Bearer ${token}` 
           }
         })
-        6
+
         if (response.data.success) {
         dispatch({ type: "LOGOUT" });
           toast.success(response.data.message)
@@ -48,17 +49,22 @@ const Tabs = ({tabs, setTabs, doctor}) => {
   return (
     <div>
         <span className="lg:hidden">
-            <BiMenu className="w-6 h-6 cursor-pointer" />
+            <BiMenu onClick={()=>setIsTab(prev=>!prev)} className="w-10 h-10 cursor-pointer" />
           </span>
 
-          <div className="hidden lg:flex flex-col p-[30px] bg-white shadow-panelShadow items-center h-max rounded-md">
-            <button onClick={()=>{setTabs("overview")}} className={`${tabs=== "overview" ? "bg-blue-100 text-primaryColor":" bg-transparent text-black"} w-full btn  mt-0 rounded-md`}>
+          <div className={`${isTab ? "flex mt-4" : "hidden"} lg:flex flex-col p-[30px] bg-white shadow-panelShadow items-center h-max rounded-md`}>
+            <button onClick={()=>{setTabs("overview") 
+              return setIsTab(false)}} className={`${tabs=== "overview" ? "bg-blue-100 text-primaryColor":" bg-transparent text-black"} w-full btn  mt-0 rounded-md`}>
                 Overview
             </button>
-            <button onClick={()=>{setTabs("appointments")}} className={`${tabs=== "appointments" ? "bg-blue-100 text-primaryColor":"bg-transparent text-black"} w-full btn  mt-0 rounded-md`}>
+            <button onClick={()=>{setTabs("appointments") 
+               return setIsTab(false)
+            }} className={`${tabs=== "appointments" ? "bg-blue-100 text-primaryColor":"bg-transparent text-black"} w-full btn  mt-0 rounded-md`}>
                Appointments
             </button>
-            <button onClick={()=>{setTabs("profile")}} className={`${tabs=== "profile" ? "bg-blue-100 text-primaryColor":"bg-transparent text-black"} w-full btn  mt-0 rounded-md`}>
+            <button onClick={()=>{setTabs("profile")
+               return setIsTab(false)
+            }} className={`${tabs=== "profile" ? "bg-blue-100 text-primaryColor":"bg-transparent text-black"} w-full btn  mt-0 rounded-md`}>
                 Profile
             </button>
             <div className="mt-[50px] md:mt-[100px]">
