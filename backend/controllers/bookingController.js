@@ -50,7 +50,7 @@ export const getSessionCheckout=async (req,res)=>{
 
     } catch (error) {
         console.log(error)
-        res.json({success:false,message:"Error creating checkout session"})
+        res.json({success:false,message:error})
     }
 }
 
