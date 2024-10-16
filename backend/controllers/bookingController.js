@@ -10,8 +10,6 @@ export const getSessionCheckout = async (req, res) => {
     const { origin } = req.headers;
 
     try {
-        console.log("Request Origin:", origin);
-        console.log("Request Origin:", req.UserId);
 
         const doctor = await doctorModel.findById(req.params.doctorId);
         const user = await userModel.findById(req.UserId); // Changed to req.userId
