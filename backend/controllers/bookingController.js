@@ -10,7 +10,8 @@ export const getSessionCheckout=async (req,res)=>{
         
         const doctor=await doctorModel.findById(req.params.doctorId)
         const user=await userModel.findById(req.UserId)
-
+        console.log(process.env.STRIPE_SECRET);
+        
         const stripe=new Stripe(process.env.STRIPE_SECRET)
         
         const session=await stripe.checkout.sessions.create({
@@ -53,7 +54,7 @@ export const getSessionCheckout=async (req,res)=>{
 
     } catch (error) {
         console.log(error)
-        res.json({success:false,message:error})
+        res.json({success:false,message:error.message,msg:"anuarg"})
     }
 }
 
