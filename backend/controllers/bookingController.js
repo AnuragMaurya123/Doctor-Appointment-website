@@ -2,6 +2,7 @@ import bookingModel from "../models/bookingModel.js";
 import doctorModel from "../models/doctorModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe"
+
 export const getSessionCheckout=async (req,res)=>{
     const {origin} =req.headers
     try {
@@ -58,6 +59,7 @@ export const getSessionCheckout=async (req,res)=>{
 
 export const getSessionCheckout2=async (req,res)=>{
     try {
+        const {origin} =req.headers
         const doctor=await doctorModel.findById(req.params.doctorId)
         const user=await userModel.findById(req.UserId)
 
@@ -66,7 +68,7 @@ export const getSessionCheckout2=async (req,res)=>{
         const session=await stripe.checkout.sessions.create({
             payment_method_types:["card"],
             mode:"payment",
-            success_url:`${CLIENT_SITE_URL}/checkout-success`,
+            success_url:`${origin}/checkout-success`,
             cancel_url:`${req.protocol}://${req.get("host")}/doctors/${doctor.id}`,
            
             customer_email:user.email,
