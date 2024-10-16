@@ -2,7 +2,7 @@ import bookingModel from "../models/bookingModel.js";
 import doctorModel from "../models/doctorModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe"
-const CLIENT_SITE_URL="https://doctor-appointment-website-4q45.vercel.app" || "http://localhost:5199"
+const CLIENT_SITE_URL="https://doctor-appointment-website-6ahz.vercel.app" || "http://localhost:5199"
 export const getSessionCheckout=async (req,res)=>{
     try {
         const doctor=await doctorModel.findById(req.params.doctorId)
