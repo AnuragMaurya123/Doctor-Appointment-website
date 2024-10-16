@@ -22,7 +22,7 @@ useEffect(() => {
           "Authorization":`Bearer ${token}`
         }
       })
-      const data = await response.json();
+      const data = await response.json();     
      setTimeout(() => {
       setData(data.data)
       setLoading(false)  

@@ -143,14 +143,16 @@ export const getUserAppointment=async (req,res)=>{
         //retrieving  all appointment of user
         const booking=await bookingModel.find({user:req.UserId})
         
+       
         
         //retriving all doctors ids which user get appointments
-        const doctorsIds= booking.map(el=>el.doctor.id)
+        const doctorsIds= booking.map(el=>el.doctor)
        
 
         //retriving doctor by doctor ids
         const doctors =await doctorModel.find({_id:{$in:doctorsIds}}).select('-password')
      
+       
         
        
          return res.json({success:true,message:"Appointments are  getting",data:doctors}) 

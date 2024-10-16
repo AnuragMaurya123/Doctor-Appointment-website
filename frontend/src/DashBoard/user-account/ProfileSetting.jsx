@@ -47,6 +47,7 @@ const ProfileSetting = ({user}) => {
                 }
             );
 
+           
             
             if (response.data.success) {
                 toast.success(response.data.message || "Profile updated successfully");
@@ -55,7 +56,7 @@ const ProfileSetting = ({user}) => {
                   payload:{
                     user:response.data.data,
                     role:response.data.data.role,
-                    token:response.data.token,
+                    token:token,
                   }
                 })
                 navigate(`/users/profile/${response.data.data.name}`)

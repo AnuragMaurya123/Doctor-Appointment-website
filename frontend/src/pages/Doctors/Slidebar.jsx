@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 const Slidebar = ({timeSolts,price,DoctorId}) => {
    const token=localStorage.getItem("token")
+   const [loading, setLoading] = useState(false)
    const handlebooking=async(e)=>{
       e.preventDefault();
       setLoading(true)
@@ -16,6 +17,7 @@ const Slidebar = ({timeSolts,price,DoctorId}) => {
             }            
           })
           const data=await response.json()
+          
           if (!response.ok) {
             throw new Error(data.message+"please try again")
           }

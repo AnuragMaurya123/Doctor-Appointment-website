@@ -14,11 +14,14 @@ export const authenticate=(req,res,next)=>{
     try {
         //spilting bearer from token
        const token = authToken.split(" ")[1];
+      
+       
        //decoding token 
        const decoded_token= jwt.verify(token,process.env.JWT_SECRET)
        //after decoding token passing id and role
        req.UserId=decoded_token.id
        req.role=decoded_token.role
+       
         next()
     } catch (error) {
         if(error.name === "TokenExpiredError"){
@@ -44,6 +47,8 @@ export const restrict = (roles) => async (req, res, next) => {
      if(doctor){
         user=doctor 
      }
+    
+     
      
     // If no user found or user role is not in the allowed roles, reject access
     if (!user || !roles.includes(user.role)) {
