@@ -4,6 +4,7 @@ import userModel from "../models/userModel.js";
 import Stripe from "stripe"
 const CLIENT_SITE_URL="https://doctor-appointment-website-6ahz.vercel.app" || "http://localhost:5199"
 export const getSessionCheckout=async (req,res)=>{
+    const {origin} =req.headers
     try {
         const doctor=await doctorModel.findById(req.params.doctorId)
         const user=await userModel.findById(req.UserId)
@@ -13,7 +14,7 @@ export const getSessionCheckout=async (req,res)=>{
         const session=await stripe.checkout.sessions.create({
             payment_method_types:["card"],
             mode:"payment",
-            success_url:`${CLIENT_SITE_URL}/checkout-success`,
+            success_url:`${origin}/checkout-success`,
             cancel_url:`${req.protocol}://${req.get("host")}/doctors/${doctor.id}`,
            
             customer_email:user.email,
