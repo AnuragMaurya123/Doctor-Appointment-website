@@ -23,9 +23,10 @@ export const getSessionCheckout = async (req, res) => {
             return res.status(404).json({ success: false, message: " user not found" });
         }
 
-        console.log("Stripe Secret:", process.env.STRIPE_SECRET); // Debugging log
+        const stripeSecret = process.env.STRIPE_SECRET;
+        console.log("Stripe Secret:", stripeSecret);
 
-        const stripe = new Stripe(process.env.STRIPE_SECRET);
+        const stripe = new Stripe(stripeSecret);
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
