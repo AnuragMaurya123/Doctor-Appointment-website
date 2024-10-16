@@ -5,10 +5,8 @@ import { toast } from 'react-toastify';
 
 const Slidebar = ({timeSolts,price,DoctorId}) => {
    const token=localStorage.getItem("token")
-   const [loading, setLoading] = useState(false)
    const handlebooking=async(e)=>{
       e.preventDefault();
-      setLoading(true)
       try {
          const response =await fetch(`${BACKEND_URL}/api/booking/checkout-session/${DoctorId}`,{
             method:"post",
@@ -17,6 +15,7 @@ const Slidebar = ({timeSolts,price,DoctorId}) => {
             }            
           })
           const data=await response.json()
+          console.log(data);
           
           if (!response.ok) {
             throw new Error(data.message+"please try again")
