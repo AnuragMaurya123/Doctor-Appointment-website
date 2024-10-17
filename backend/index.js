@@ -24,11 +24,12 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: '*',
+  origin: ['http://localhost:5199', 'https://doctor-appointment-website-blue.vercel.app/'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'], 
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 
 // Test Endpoint
