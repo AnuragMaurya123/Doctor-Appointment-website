@@ -31,8 +31,6 @@ const DoctorsFeedbackFrom = () => {
               'Authorization': `Bearer ${token}` 
           }
           })
-          console.log(response);
-          
           toast.success(response.data.message)
         
           

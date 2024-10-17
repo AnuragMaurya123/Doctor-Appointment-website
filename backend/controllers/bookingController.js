@@ -24,8 +24,7 @@ export const getSessionCheckout = async (req, res) => {
         }
 
         const stripeSecret = process.env.STRIPE_SECRET;
-        console.log("Stripe Secret:", stripeSecret);
-        console.log("Stripe Secret:", process.env.STRIPE_SECRET);
+       
 
         const stripe = new Stripe(stripeSecret);
 

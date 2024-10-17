@@ -2,7 +2,6 @@ import React from 'react'
 import { formData } from '../../utils/fromData'
 
 const Appointment = ({Appointment}) => {
-    console.log(Appointment);
     
   return (
     <table className='w-full text-left text-sm text-gray-500 '>
