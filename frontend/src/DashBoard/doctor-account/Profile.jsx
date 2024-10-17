@@ -568,7 +568,7 @@
               className="w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-lg py-3 px-4"
               type="submit"
             >
-              {loading ? <HashLoader size={30} color="#fff" /> : "Register"}
+              {loading ? <HashLoader size={30} color="#fff" /> : "Update"}
             </button>
           </div>
         </form>
