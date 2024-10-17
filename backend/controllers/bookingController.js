@@ -13,6 +13,8 @@ export const getSessionCheckout = async (req, res) => {
 
         const doctor = await doctorModel.findById(req.params.doctorId);
         const user = await userModel.findById(req.UserId); // Changed to req.userId
+        
+        
 
         if (!doctor ) {
             return res.status(404).json({ success: false, message: "Doctor  not found" });
@@ -23,6 +25,7 @@ export const getSessionCheckout = async (req, res) => {
 
         const stripeSecret = process.env.STRIPE_SECRET;
         console.log("Stripe Secret:", stripeSecret);
+        console.log("Stripe Secret:", process.env.STRIPE_SECRET);
 
         const stripe = new Stripe(stripeSecret);
 
