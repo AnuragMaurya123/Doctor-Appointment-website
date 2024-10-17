@@ -1,1 +1,1 @@
-export const BACKEND_URL="https://doctor-appointment-website-blue.vercel.app"
+export const BACKEND_URL="https://doctor-appointment-website-8ym6kflbc.vercel.app"
