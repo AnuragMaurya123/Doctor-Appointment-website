@@ -24,7 +24,7 @@ const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: ['http://localhost:5199', 'https://doctor-appointment-website-blue.vercel.app/'],
+  origin: ['http://localhost:5199', 'https://doctor-appointment-website-wxrj.vercel.app'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
