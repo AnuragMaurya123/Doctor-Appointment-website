@@ -13,87 +13,94 @@ const createjwt = (user) => {
 
 
 // for register user
-export const register=async(req,res)=>{
-
-    const {email, password, name, role, gender}=req.body
+export const register = async (req, res) => {
+    const { email, password, name, role, gender } = req.body;
     
-     //getting images
-     let photo = req.file;
-
-    try {
-        let user=null
-        let uploadResult=null
-
-        if (photo.path) {
-            uploadResult = await cloudinary.uploader.upload(photo.path, { resource_type: "image" });
-        } else {
-            uploadResult = { secure_url: "https://res.cloudinary.com/dbg64eker/image/upload/v1727327044/profile_xpm84y.webp" };
-        }
-        
-        //checking user is patient or doctor
-        if(role==="patient"){
-            user=await userModel.findOne({email})
-        }else if(role==="doctor"){
-            user=await doctorModel.findOne({email})
-        }
-
-        //checking patient or doctor is already exists or not
-        if (user) {
-            return res.status(400).json({message:"User already Exists"})
-        } 
-        
-        //checking email address is  valid
-        if(!validator.isEmail(email)){
-            return res.status(400).json({message:"Please Enter valid email"})
-        }
-
-        //checking password length is more 8 char
-        if (password.length<8) {
-            return res.status(400).json({message:"Your Password should have 8 letter"})
-        }
-
-        //bcrypting Password
-        const salt = await bcrypt.genSalt(10)
-        const hashingPassword= await bcrypt.hash(password,salt)
-
-        // Define the user instance
-        const userData = {
-            email,
-            password: hashingPassword,
-            name,
-            role,
-            photo: uploadResult.secure_url,
-            gender,
-        };
-        
-        let newUser=null
-        //creating new user or new doctors Account 
-        if(role==="patient"){
-           newUser=await userModel.create(userData)    
-        }else if (role==="doctor"){
-            newUser=await doctorModel.create(userData)  
-        }
+    // Getting images
+    let photo = req.file;
  
-        //creating User with jwt token
-        const token = createjwt(newUser)
-       
-        //passing the date of user escape password
-        const {password:_,appointments,...rest}=newUser._doc
-        res.json({
-            success:true,
-            message:"Register Successfully",
-            token,
-            data:{...rest}
-        }); 
-
-
-
-        
+    try {
+      let user = null;
+      let uploadResult = null;
+  
+      // Attempt Cloudinary upload if photo exists
+      if (photo) {
+        try {
+          uploadResult = await cloudinary.uploader.upload(photo.path, { resource_type: "image" });
+        } catch (error) {
+          console.error("Error during image upload:", error);
+          return res.status(500).json({ message: "Failed to upload profile image" });
+        }
+      } else {
+        uploadResult = { secure_url: "https://res.cloudinary.com/dbg64eker/image/upload/v1727327044/profile_xpm84y.webp" };
+      }
+  
+      // Checking if user is a patient or doctor
+      if (role === "patient") {
+        user = await userModel.findOne({ email });
+      } else if (role === "doctor") {
+        user = await doctorModel.findOne({ email });
+      }
+  
+      // User existence check
+      if (user) {
+        return res.status(400).json({ message: "User already exists" });
+      }
+  
+      // Email validation
+      if (!validator.isEmail(email)) {
+        return res.status(400).json({ message: "Please enter a valid email address" });
+      }
+  
+      // Password length validation
+      if (password.length < 8) {
+        return res.status(400).json({ message: "Password should be at least 8 characters long" });
+      }
+  
+      // Hashing password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+  
+      // Define user data
+      const userData = {
+        email,
+        password: hashedPassword,
+        name,
+        role,
+        photo: uploadResult.secure_url,
+        gender,
+      };
+  
+      // Create new user or doctor account
+      let newUser = null;
+      if (role === "patient") {
+        newUser = await userModel.create(userData);
+      } else if (role === "doctor") {
+        newUser = await doctorModel.create(userData);
+      }
+  
+      // Verify user creation and create JWT token
+      if (!newUser) {
+        return res.status(500).json({ message: "User registration failed" });
+      }
+  
+      const token = createjwt(newUser);
+  
+      // Send response with user data excluding password
+      const { password: _, appointments, ...userInfo } = newUser._doc;
+      res.json({
+        success: true,
+        message: "Registered successfully",
+        token,
+        data: userInfo,
+      });
+  
     } catch (error) {
-        console.log(error)
-        res.json({message:error.message})
+      console.error("Registration error:", error);
+      res.status(500).json({ message: error.message || "An unexpected error occurred during registration" });
     }
-}
+  };
+  
 
 // for register user
 export const login=async(req,res)=>{
